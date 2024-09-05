@@ -1,0 +1,142 @@
+<div class="row gutters-sm mt-5">
+    <div class="col-md-3 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-column align-items-center text-center">
+            <img src="{{ !employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + employee.FileUrl }}" alt="Admin" class="rounded-circle" width="150" />
+            <div class="mt-3">
+              <h4>{{ employee.FirstName }} {{ employee.LastName }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card h-50 mt-3">
+        <ul class="list-group list-group-flush">
+          <h5 class="d-flex align-items-center justify-content-center m-3">Incentive Detials</h5>
+
+          <li  *ngFor="let incentive of incentives" class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <span>*</span>
+            <h6 class="mb-0">{{incentive.IncentivePurpose.Purpose}}</h6>
+            <span class="text-secondary">{{incentive.CreatedDateTime | date}}</span>
+            <span class="text-secondary">{{incentive.Amount | currency : 'INR'}}</span>
+            <hr/>
+          </li>
+          <div *ngIf="incentives.length==0" class="text-center"> Not Found</div>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-4">
+              
+            </div>
+            <div class="col-sm-4">
+              <h5 class="mb-0"><b>Year</b></h5>
+            </div>
+            <div class="col-sm-4">
+              <h5 class="mb-0"><b>Month</b></h5>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">FromDate</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.FromDate | date }}</div>
+            <div class="col-sm-4 text-secondary">-</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">Basic</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-': salaryStructure.Basic | currency : 'INR' }}</div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-': salaryStructure.Basic / 12 | currency : 'INR' }}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">HRA</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-': salaryStructure.HRA | currency : 'INR' }}</div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-': salaryStructure.HRA / 12 | currency : 'INR'}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">DA</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.DA | currency : 'INR' }}</div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.DA / 12 | currency : 'INR'}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">Conveyance</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.Conveyance | currency : 'INR'}}</div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.Conveyance / 12 | currency : 'INR' }}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">TDS</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">- {{ !salaryStructure?'-':salaryStructure.TDS | currency : 'INR'}}</div>
+            <div class="col-sm-4 text-secondary">- {{ !salaryStructure?'-':salaryStructure.TDS / 12 | currency : 'INR' }}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">PT</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">- </div>
+            <div class="col-sm-4 text-secondary">- {{!salaryStructure?'-': 200 | currency : 'INR'}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">MedicalAllowance</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.MedicalAllowance | currency : 'INR'}}</div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.MedicalAllowance / 12 | currency : 'INR'}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">SpecialAllowance</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.SpecialAllowance | currency : 'INR'}}</div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructure.SpecialAllowance / 12 | currency : 'INR'}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">GrossSalary</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">{{!salaryStructure?'-': salaryStructureGross | currency : 'INR'}}</div>
+            <div class="col-sm-4 text-secondary">{{!salaryStructure?'-': salaryStructureGross / 12 | currency : 'INR'}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">NetSalary</h6>
+            </div>
+            <div class="col-sm-4 text-secondary"> {{ !salaryStructure?'-': salaryStructureNet | currency : 'INR'}} </div>
+            <div class="col-sm-4 text-secondary">{{ !salaryStructure?'-':salaryStructureNet / 12 | currency : 'INR'}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-4">
+              <h6 class="mb-0">Total</h6>
+            </div>
+            <div class="col-sm-4 text-secondary">-</div>
+            <div class="col-sm-4 text-secondary">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

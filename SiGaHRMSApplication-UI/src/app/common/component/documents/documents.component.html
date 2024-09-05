@@ -1,0 +1,94 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink> All Documents</button>
+    </li>
+  </ul>
+  <div class="col-md-12 col-xl-8" style="width: 100%">
+    <div class="d-flex flex-row-reverse m-2">
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="openDocumentModal()"> Add New </button>
+      </div>
+    </div>
+    <div class="card tbl-card">
+      <div class="card-body" id="foldersGroup">
+        <div id="main-folders" class="d-flex align-items-stretch flex-wrap">
+          <button class="folder-container" *ngFor="let doc of documents" (click)="openDocumentsModal(doc)">
+            <div class="folder-icon">
+              <i class="ti ti-folder"></i>
+            </div>
+            <div class="folder-name">{{ doc[0].Employee.FirstName }}</div>
+          </button>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
+
+<div #documentModal class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedDocument">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{
+          !selectedDocument ? '' : selectedDocument.DocumentId ? 'Edit document' : 'New document'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form
+        [formData]="selectedDocument"
+        (onClose)="closeModel()"
+        [fields]="documentfields"
+        (onSave)="onDocumentSaved($event)"
+      ></app-form>
+    </div>
+  </div>
+</div>
+
+<div #documentsModal class="modal fade" id="documentsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedDocuments">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Documents</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <div class="modal-body row ">
+        <div class="d-flex">
+          <div class="m-2" *ngFor="let selectedDocument of selectedDocuments">
+            <div *ngIf="!sanitizedFileUrl">
+              <div *ngIf="getType(selectedDocument.FileUrl) == 'pdf'" (click)="openIFrame(selectedDocument)">
+                <img src="./../../../../assets/images/file_type_pdf_icon_130274.png" height="100px" width="100px" /><div
+                  >{{ selectedDocument.DocumentName }}.pdf</div
+                >
+              </div>
+              <div *ngIf="getType(selectedDocument.FileUrl) != 'pdf'" (click)="openIFrame(selectedDocument)">
+                <img src="./../../../../assets/images/picture_photo_image_icon_131252.png" height="100px" width="100px" /><div
+                  >{{ selectedDocument.DocumentName }}.{{ getType(selectedDocument.FileUrl) }}</div
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="sanitizedFileUrl" class="embed-responsive embed-responsive-16by9 position-relative">
+
+          <span *ngIf="fileType == 'pdf'; else imageBlock">
+            <iframe class="col-12" [src]="sanitizedFileUrl" height="600px" width="1000px" ></iframe>
+          </span>
+          
+          <ng-template #imageBlock>
+            <img class="col-12 object-fit-cover" [src]="sanitizedFileUrl" style="max-height: 600px; width: 100%; object-fit: contain;" />
+          </ng-template> </div>
+      </div>
+      <div class="modal-footer">
+       
+          <div *ngIf="sanitizedFileUrl">
+            <button class="btn btn-danger" (click)="deleteDocument(deleteId)" ><i class="ti ti-trash"></i></button
+            ><button class="btn btn-secondary mx-2" (click)="sanitizedFileUrl = null"><i class="ti ti-x"></i></button
+          ></div>
+          <span *ngIf="!sanitizedFileUrl"><button class="btn btn-secondary" (click)="closeModel()">Close</button></span>
+      </div
+      >
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+
+        .borderless-input {
+          border: none;
+          outline: none;
+          box-shadow: none;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          margin: 0;
+          background-color: transparent;
+        }
+        .borderless-input:focus {
+          border: none;
+          outline: none;
+          box-shadow: none;
+        }
+        .borderless-select {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background: transparent;
+          border: none;
+          outline: none;
+          box-shadow: none;
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          margin: 0;
+        }
+          .appearance{
+          appearance: none;
+          }
+          #taskDetailsBody select{
+          background:none}
+
+        .error-message {
+    color: red;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+  }
+     

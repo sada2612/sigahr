@@ -1,0 +1,62 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-user-square"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+          <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        </svg>
+        All Employees</button
+      >
+    </li>
+  </ul>
+  <div class="col-md-12 col-xl-8" style="width: 100%">
+    <div class="card tbl-card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless mb-0">
+            <thead>
+              <tr class="text-center">
+                <th></th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Designation</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Joining Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let employee of employees" class="text-center">
+                <td>
+                  <div class="flex-shrink-0"> <img [src]="!employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + employee.FileUrl" alt="user-image" class="user-avtar wid-35" /> </div
+                ></td>
+                <td>{{ employee.EmployeeId }}</td>
+                <td>{{ employee.FirstName }} {{ employee.LastName }}</td>
+                <td>{{ employee.CurrentDesignation.DesignationName }}</td>
+                <td>{{ employee.ContactNumber }}</td>
+                <td>{{ employee.PersonalEmail }}</td>
+                <td>{{ employee.DateOfJoining | date }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>

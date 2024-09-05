@@ -1,0 +1,108 @@
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <h5 class="mb-3 mt-2">TimeSheet Details</h5>
+  <div class="d-flex gap-3 align-items-center">
+    <button class="btn btn-secondary" (click)="navigate(false)"> <i class="bi bi-caret-left"></i> </button>
+    <div class="d-flex justify-content-center align-items-center">
+      {{ getWeekRange(date).startOfWeek | date }} - {{ getWeekRange(date).endOfWeek | date }}
+    </div>
+    <button class="btn btn-secondary" (click)="navigate(true)"><i class="bi bi-caret-right"></i> </button>
+  </div>
+  <div class="flex-shrink-0">
+    <img
+      [src]="
+        !timeSheet.Employee
+          ? ''
+          : !timeSheet.Employee.FileUrl
+          ? 'assets/images/user/avatar-2.jpg'
+          : 'http://localhost:5238/' + timeSheet.Employee.FileUrl
+      "
+      alt="user-image"
+      class="user-avatar rounded-circle wid-60"
+    />
+    <div
+      ><span>{{ !timeSheet.Employee ? '' : timeSheet.Employee.FirstName + ' ' + timeSheet.Employee.LastName }}</span></div
+    >
+  </div>
+</div>
+<div class="col-12">
+  <div class="card tbl-card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr class="text-center">
+              <th>Task</th>
+              <ng-container *ngFor="let date of dates">
+                <th>{{ date | date }}</th>
+              </ng-container>
+              <th>Week ∑</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="taskArray.length <= 0; else elseBlock">
+              <tr class="text-center">
+                <td>Not Logs Found</td>
+              </tr>
+            </ng-container>
+            <ng-template #elseBlock>
+              <tr *ngFor="let taskGroup of taskArray; let i = index" class="text-center">
+                <td>{{ taskGroup[0].Task.TaskDetails }}</td>
+                <td *ngFor="let daySheet of taskGroup" class="border">
+                  <span>{{ daySheet.Time | number: '1.2-2' }}</span>
+                  <span class="d-flex align-items-end justify-content-end" (click)="openModal(daySheet)">
+                    <svg
+                      style="color: gray"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-clock-edit"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M21 12a9 9 0 1 0 -9.972 8.948c.32 .034 .644 .052 .972 .052" />
+                      <path d="M12 7v5l2 2" />
+                      <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
+                    </svg>
+                  </span>
+                </td>
+                <td>{{ getTaskWeekHours(taskGroup[i].Task.TaskId) | number: '1.2-2' }}</td>
+              </tr>
+              <tr class="text-center">
+                <td class="border border-bottom-0">Total</td>
+                <td *ngFor="let date of dates" class="border border-bottom-0">
+                  {{ getDayHours(date) | number: '1.2-2' }}
+                </td>
+                <td class="border border-bottom-0">0000</td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary mt-4" (click)="openTaskModal()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<div #dayTaskModal class="modal fade" id="dayTaskModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedDayTask">
+      <app-day-task-form [daySheet]="selectedDayTask" [employeeId]="employeeId" (onSave)="onSaved()"></app-day-task-form>
+    </div>
+  </div>
+</div>
+<div #taskModal class="modal fade" tabindex="-1" aria-labelledby="taskModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedTask">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="salaryModalLabel">{{ !selectedTask ? '' : selectedTask.TaskId ? 'Edit Task' : 'New Task' }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form [formData]="selectedTask" (onClose)="closeModel()" [fields]="taskFields" (onSave)="onTaskSaved($event)"></app-form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,408 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink (click)="actionLink = 'month'; template = 'EmployeeSalary'"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-user-square"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+          <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        </svg>
+        All Salaries</button
+      >
+    </li>
+    <li [ngbNavItem]="2">
+      <button ngbNavLink (click)="template = 'EmployeeSalaryStructure'; actionLink = 'year'"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-user-square"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+          <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        </svg>
+        Annual Packages</button
+      >
+    </li>
+    <li [ngbNavItem]="3" (click)="actionLink = 'incentive'">
+      <button ngbNavLink
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-user-square"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+          <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        </svg>
+        All Incentives</button
+      >
+    </li>
+  </ul>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'month'">
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="container">
+        <div class="row mb-2">
+          <div class="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <h5 class="mb-3 mt-2">All Salaries Details</h5>
+          </div>
+          <div class="col-12 col-md-6 d-flex justify-content-end align-items-center mb-3 mb-md-0">
+            <!-- <button class="btn btn-primary" (click)="openSalaryModal()">New Salary</button> -->
+
+            <div class="dropdown">
+              <button
+                class="btn btn-primary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                New Salary
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item dropdown-item-primary" (click)="AddAllEmployeeSalaries()">All Employee</a></li>
+                <li><a class="dropdown-item dropdown-item-primary" (click)="openSalaryModal()">Single Employee</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12 d-flex flex-column flex-md-row gap-2 align-items-end">
+            <div class="form-group mb-3 mb-md-0 me-md-3">
+              <label for="fromDate"><b>From Date :</b></label>
+              <input type="date" class="form-control" id="fromDate" [(ngModel)]="from" name="dp" />
+            </div>
+            <div class="form-group mb-3 mb-md-0 me-md-3">
+              <label for="toDate"><b>To Date :</b></label>
+              <input type="date" class="form-control" id="toDate" [(ngModel)]="to" [min]="from" name="kp" />
+            </div>
+            <div class="get-btn mb-3 mb-md-0">
+              <button class="btn btn-md btn-primary" (click)="loadSalaries()">Get Salaries</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>SalaryForAMonth</th>
+                  <th>Basic</th>
+                  <th>Conveyance</th>
+                  <th>SpecialAllowance</th>
+                  <th>MedicalAllowance</th>
+                  <th>Leaves</th>
+                  <th>LeaveDeduction</th>
+                  <th>NetSalary</th>
+                  <th>GrossSalary</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let salary of employeeSalary" class="text-center">
+                  <td>
+                    <div class="flex-shrink-0">
+                      <img
+                        [src]="
+                          !salary.Employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + salary.Employee.FileUrl
+                        "
+                        alt="user-image"
+                        class="user-avtar wid-35"
+                      /> </div
+                  ></td>
+                  <td>{{ salary.Employee.FirstName }} {{ salary.Employee.LastName }}</td>
+                  <td>{{ salary.SalaryForAMonth | date: 'MMM d, y, h:mm a' }}</td>
+                  <td>{{ salary.Basic }}</td>
+                  <td>{{ salary.Conveyance }}</td>
+                  <td>{{ salary.SpecialAllowance }}</td>
+                  <td>{{ salary.MedicalAllowance }}</td>
+                  <td>{{ salary.Leaves }}</td>
+                  <td>{{ salary.LeaveDeduction }}</td>
+                  <td>{{ salary.NetSalary }}</td>
+                  <td>{{ salary.GrossSalary }}</td>
+
+                  <td>
+                    <a class="btn btn-outline-success" (click)="getEmpSalary(salary.Employee.EmployeeId)"> <i class="ti ti-plus"></i></a>
+                    <a class="btn btn-outline-primary mx-2" (click)="openSalaryModal(salary)"><i class="ti ti-edit"></i></a>
+                    <a class="btn btn-outline-danger"><i class="ti ti-trash"></i></a
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'year'">
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="container">
+        <div class="row mb-2">
+          <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <h5 class="mb-3 mt-2">All Yearly Packages</h5>
+            <div class="btn-group mb-3 mb-md-0">
+              <button class="btn btn-primary" (click)="openSalaryStructureModal()">New Package</button>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12 d-flex flex-column flex-md-row gap-2 align-items-end">
+            <div class="form-group mb-3 mb-md-0 me-md-3">
+              <label for="fromDate"><b>From Date :</b></label>
+              <input type="date" class="form-control" id="fromDate" [(ngModel)]="from" name="dp" />
+            </div>
+            <div class="form-group mb-3 mb-md-0 me-md-3">
+              <label for="toDate"><b>To Date :</b></label>
+              <input type="date" class="form-control" id="toDate" [(ngModel)]="to" [min]="from" name="kp" />
+            </div>
+            <div class="get-btn mb-3 mb-md-0">
+              <button class="btn btn-md btn-primary" (click)="loadSalaries()">Get Salaries</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>FromDate</th>
+                  <th>ToDate</th>
+                  <th>Basic</th>
+                  <th>Conveyance</th>
+                  <th>TDS</th>
+                  <th>HRA</th>
+                  <th>MedicalAllowance</th>
+                  <th>SpecialAllowance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let structure of employeeSalaryStructures" class="text-center">
+                  <td>
+                    <div class="flex-shrink-0">
+                      <img
+                        [src]="
+                          !structure.Employee.FileUrl
+                            ? 'assets/images/user/avatar-2.jpg'
+                            : 'http://localhost:5238/' + structure.Employee.FileUrl
+                        "
+                        alt="user-image"
+                        class="user-avtar wid-35"
+                      /> </div
+                  ></td>
+                  <td>{{ structure.Employee.FirstName }} {{ structure.Employee.LastName }}</td>
+                  <td>{{ structure.FromDate | date }}</td>
+                  <td>{{ !structure.ToDate ? 'Not Yet Declared !' : (structure.ToDate | date) }}</td>
+                  <td>{{ structure.Basic }}</td>
+                  <td>{{ structure.Conveyance }}</td>
+                  <td>{{ structure.TDS }}</td>
+                  <td>{{ structure.HRA }}</td>
+                  <td>{{ structure.MedicalAllowance }}</td>
+                  <td>{{ structure.SpecialAllowance }}</td>
+
+                  <td>
+                    <a class="btn btn-outline-primary" (click)="openSalaryStructureModal(structure)"><i class="ti ti-edit"></i></a>
+                    <a class="btn btn-outline-danger m-2"><i class="ti ti-trash"></i></a
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'incentive'">
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="container">
+        <div class="row mb-2">
+          <div class="col-12 d-flex justify-content-between align-items-center">
+            <h5 class="mb-3 mt-2">All Yearly Incentives</h5>
+            <div class="btn-group">
+              <button class="btn btn-primary" (click)="openIncentiveModal()">New Incentive</button>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12 d-flex flex-wrap gap-2 align-items-end">
+            <div class="form-group mb-3 me-3">
+              <label for="fromDate"><b>From Date :</b></label>
+              <input type="date" class="form-control" id="fromDate" [(ngModel)]="from" />
+            </div>
+            <div class="form-group mb-3 me-3">
+              <label for="toDate"><b>To Date :</b></label>
+              <input type="date" class="form-control" id="toDate" [(ngModel)]="to" [min]="from" />
+            </div>
+            <div class="get-btn mb-3">
+              <button class="btn btn-md btn-primary" (click)="getIncentive()">Get Incentive</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>IncentivePurpose</th>
+                  <th>Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let incentive of incentives" class="text-center">
+                  <td>
+                    <div class="flex-shrink-0">
+                      <img
+                        [src]="
+                          !incentive.Employee.FileUrl
+                            ? 'assets/images/user/avatar-2.jpg'
+                            : 'http://localhost:5238/' + incentive.Employee.FileUrl
+                        "
+                        alt="user-image"
+                        class="user-avtar wid-35"
+                      /> </div
+                  ></td>
+                  <td>{{ incentive.Employee.FirstName }} {{ incentive.Employee.LastName }}</td>
+                  <td>{{ incentive.CreatedDateTime | date }}</td>
+                  <td>{{ incentive.Amount }}</td>
+                  <td>{{ incentive.IncentivePurpose.Purpose }}</td>
+                  <td>{{ incentive.Description }}</td>
+                  <td>
+                    <a class="btn btn-outline-primary" (click)="openIncentiveModal(incentive)"><i class="ti ti-edit"></i></a>
+                    <a class="btn btn-outline-danger m-2"><i class="ti ti-trash"></i></a
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
+
+<!-- Incentive Modal -->
+<div #incentiveModal class="modal fade" tabindex="-1" aria-labelledby="incentiveModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedIncentive">
+      <div class="modal-header">
+        <img
+          *ngIf="selectedIncentive.Employee"
+          [src]="'http://localhost:5238/' + selectedIncentive.Employee.FileUrl"
+          class="rounded-circle wid-50"
+          alt="user img"
+        />
+
+        <h1 class="modal-title fs-5" id="incentiveModalLabel">{{
+          !selectedIncentive ? '' : selectedIncentive.IncentiveId ? '' : 'New Incentive'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form
+        [formData]="selectedIncentive"
+        (onClose)="closeModel()"
+        [fields]="incentiveForm"
+        (onSave)="onIncentiveSaved($event)"
+      ></app-form>
+    </div>
+  </div>
+</div>
+
+<!-- Salary Modal -->
+<div #salaryModal class="modal fade" tabindex="-1" aria-labelledby="salaryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedEmployeeSalary">
+      <div class="modal-header">
+        <img
+          *ngIf="selectedEmployeeSalary.Employee"
+          [src]="'http://localhost:5238/' + selectedEmployeeSalary.Employee.FileUrl"
+          class="rounded-circle wid-50"
+          alt="user img"
+        />
+
+        <h1 class="modal-title fs-5" id="salaryModalLabel">{{
+          !selectedEmployeeSalary ? '' : selectedEmployeeSalary.EmployeeSalaryId ? '' : 'New Salary'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form
+        [formData]="selectedEmployeeSalary"
+        (onClose)="closeModel()"
+        [fields]="empSalaryForm"
+        (onSave)="onSalarySaved($event)"
+      ></app-form>
+    </div>
+  </div>
+</div>
+
+<!-- Salary Structure Modal -->
+<div #salaryStructureModel class="modal fade" tabindex="-1" aria-labelledby="salaryStructureModelLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedEmployeeSalaryStructure">
+      <div class="modal-header">
+        <img
+          *ngIf="selectedEmployeeSalaryStructure.Employee"
+          [src]="'http://localhost:5238/' + selectedEmployeeSalaryStructure.Employee.FileUrl"
+          class="rounded-circle wid-50"
+          alt="user img"
+        />
+        <h1 class="modal-title fs-5" id="salaryStructureModelLabel">{{
+          !selectedEmployeeSalaryStructure ? '' : selectedEmployeeSalaryStructure.EmployeeSalaryStructureId ? '' : 'New Salary Structure'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form
+        [formData]="selectedEmployeeSalaryStructure"
+        [fields]="empSalaryStructureForm"
+        (onClose)="closeModel()"
+        (onSave)="onSalaryStructureSaved($event)"
+      ></app-form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="row">
+  <app-announcement
+    (onDelete)="getAnnouncement()"
+    [announcements]="announcements"
+    (onUpdate)="openAnnouncementModal($event)"
+  ></app-announcement>
+</div>
+<div *ngIf="userRole.SUPER_ADMIN == currentUser.role" class="row">
+  <app-admin-chart ></app-admin-chart>
+</div>
+
+<div *ngIf="userRole.SUPER_ADMIN != currentUser.role" class="row">
+  <app-user-chart></app-user-chart>
+</div>
+
+<div class="row">
+  <div class="col-sm-4 col-md-5 col-xl-4 col-12">
+    <h5 class="mb-3">Upcoming</h5>
+    <div class="card">
+      <div class="list-group list-group-flush">
+        <span class="list-group-item list-group-item-action" *ngFor="let upcoming of upcomingArray">
+          <div class="row">
+            <div class="col-2" >
+              <img class="avtar avtar-s rounded-circle " [src]="upcoming.ImgUrl"/>
+            </div>
+            <div class="col-5"  >
+              <h6 class="mb-1">{{ upcoming.Title }}</h6>              
+            </div>
+            <div class="col-5" >
+              <h6 class="mb-1">{{ upcoming.Date | date }}</h6>
+            </div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+ <div class="col-sm-8 col-md-7 col-xl-8 col-12">
+    <h5 class="mb-3">Office Fest</h5>
+    <div class="card">
+      <div id="carouselExampleIndicators" class="carousel slide fixed-height-carousel" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <span *ngFor="let officeFest of officeFests; let i = index">
+            <div *ngFor="let url of officeFest.FileUrl; let i = index" class="carousel-item" [ngClass]="{ active: i === 0 }">
+              <img class="d-block w-100" [src]="base + url" [alt]="officeFest.OfficeFestName" />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>{{ officeFest.OfficeFestDate | date }}</h5>
+                <p>{{ officeFest.OfficeFestName }}</p>
+              </div>
+            </div>
+          </span>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div #announcementModal class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedAnnouncement">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{
+          !selectedAnnouncement ? '' : selectedAnnouncement.AnnouncementId ? 'Edit Announcement' : 'New Announcement'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form
+        [formData]="selectedAnnouncement"
+        (onClose)="closeModel()"
+        [fields]="announcementfields"
+        (onSave)="onAnnouncementSaved($event)"
+      ></app-form>
+    </div>
+  </div>
+</div>

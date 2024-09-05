@@ -1,0 +1,104 @@
+<div class="modal-body">
+  <form [formGroup]="form">
+    <div class="row">
+      <div *ngIf="fileUrl != null" class="d-flex flex-column justify-content-center align-items-center">
+        <div>
+          <img [src]="fileUrl" class="rounded-circle mx-auto d-block" id="profile" alt="Profile Picture" height="100" width="100" />
+        </div>
+        <div>
+          <input
+            id="fileUpload"
+            formControlName="fileUrl"
+            class="form-control"
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            required
+          />
+        </div>
+      </div>
+      <div *ngIf="fields.length > 0" class="row">
+        <ng-container *ngFor="let field of fields">
+          <ng-container *ngIf="!field.hidden && field.type!='file'">
+            <div
+              [ngClass]="field.type === 'textarea' ? 'col-12' : modalClass"
+            >
+              <div class="form-group">
+                <label [for]="field.id">{{ field.label }}</label>
+                <ng-container [ngSwitch]="field.type">
+                  <input
+                    *ngSwitchCase="'text'"
+                    [type]="field.type"
+                    [formControlName]="field.model"
+                    [id]="field.id"
+                    class="form-control"
+                    [placeholder]="field.placeholder"
+                    [required]="field.required"
+                  />
+                  <input
+                    *ngSwitchCase="'email'"
+                    [type]="field.type"
+                    [formControlName]="field.model"
+                    [id]="field.id"
+                    class="form-control"
+                    [placeholder]="field.placeholder"
+                    [required]="field.required"
+                  />
+                  <input
+                    *ngSwitchCase="'number'"
+                    [type]="field.type"
+                    [formControlName]="field.model"
+                    [id]="field.id"
+                    [placeholder]="field.placeholder"
+                    [step]="field.step"
+                    class="form-control"
+                    [required]="field.required"
+                  />
+                  <input
+                    *ngSwitchCase="'date'"
+                    [type]="field.type"
+                    [formControlName]="field.model"
+                    [id]="field.id"
+                    [placeholder]="field.placeholder"
+                    [disabled]="field.disabled"
+                    class="form-control"
+                    [required]="field.required"
+                  />
+
+                <select
+                *ngSwitchCase="'select'"
+                [formControlName]="field.model"
+                [id]="field.id"
+                class="form-control"
+                [required]="field.required"
+              >
+                <option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option>
+              </select>
+              
+                  <textarea
+                    *ngSwitchCase="'textarea'"
+                    [id]="field.id"
+                    [formControlName]="field.model"
+                    class="form-control"
+                    [placeholder]="field.placeholder"
+                  ></textarea>
+                </ng-container>
+                <div *ngIf="form.get(field.model)?.invalid && (form.get(field.model)?.dirty || form.get(field.model)?.touched)" class="text-danger">
+                  <div *ngIf="form.get(field.model)?.errors?.['required']">{{ field.label }} is required.</div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div *ngIf="fields.length === 0">
+        <p>No fields to display.</p>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="close()">Close</button>
+  <button type="button" class="btn btn-primary" [disabled]="!form.valid || !hasChanges" (click)="submitForm()">Save changes</button>
+</div>
+

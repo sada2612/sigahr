@@ -1,0 +1,142 @@
+<div *ngIf="employeeAtt" class="container">
+  <div class="main-body">
+    <div class="d-flex row">
+      <div class="col-lg-8 col-md-12 col-sm-12">
+        <h5 class="mb-3 text-center">Attendance Report</h5>
+        <div class="d-flex gap-2 align-items-end">
+          <div>
+            <label for=""><b>Select Date :</b> </label>
+            <input type="date" class="form-control" [(ngModel)]="date" name="dp" />
+          </div>
+
+          <div class="get-btn ms-3">
+            <button class="btn btn-md btn-primary" (click)="getAttedance()">Get Attendances</button>
+          </div>
+        </div>
+        <div class="card mt-2">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <h5 class="mb-0">Attendances Analytics</h5>
+              <ul ngbNav aria-busy="true" #nav="ngbNav" class="nav-pills justify-content-end mb-0" (navChange)="onNavChange($event)">
+                <li [ngbNavItem]="1">
+                  <a ngbNavLink>Week</a>
+                  <ng-template ngbNavContent>
+                    <div id="visitor-chart"></div>
+                    <div class="d-flex justify-content-around mb-3">
+                      <button class="btn btn-outline-secondary" (click)="backWeek()"><i class="bi bi-arrow-left"></i></button>
+                      <button class="btn btn-outline-secondary" (click)="nextWeek()"><i class="bi bi-arrow-right"></i></button>
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                  <a ngbNavLink>Month</a>
+                  <ng-template ngbNavContent>
+                    <div id="visitor-chart-1"></div>
+                    <div class="d-flex justify-content-around mb-3">
+                      <button class="btn btn-outline-secondary" (click)="backMonth()"><i class="bi bi-arrow-left"></i></button>
+                      <button class="btn btn-outline-secondary" (click)="nextMonth()"><i class="bi bi-arrow-right"></i></button>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <div [ngbNavOutlet]="nav"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12 col-sm-12">
+        <div>
+          <h5 class="mb-3 text-center">Today Attendance</h5>
+          <div class="card">
+            <div class="list-group list-group-flush">
+              <a class="list-group-item list-group-item-action text-center">
+                <div class="flex-grow-1 ms-3">
+                  <div>
+                    <div class="flex-shrink-0">
+                      <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" /> </div
+                  ></div>
+                </div>
+
+                <div class="flex-grow-1 ms-3 mt-3">
+                  <h6 class="mb-1">{{  employeeAtt.Employee.FirstName}} {{ employeeAtt.Employee.LastName}}</h6>
+                </div>
+              </a>
+            </div>
+            <div class="d-flex justify-content-around mt-3 mb-3">
+              <button class="btn btn-outline-secondary p-2"><app-clock></app-clock></button>
+              <span *ngIf="employeeAtt.EmployeeId == this.userAuth && employeeAtt.AttendanceDate == today">
+                <div [ngSwitch]="attendanceButton">
+                  <button *ngSwitchCase="'InTime'" class="btn btn-primary" (click)="checkIn()">Check-In</button>
+                  <button *ngSwitchCase="'OutTime'" class="btn btn-danger" (click)="checkOut()">Check-Out</button>
+                  <button *ngSwitchCase="'Completed'" class="btn btn-success">Completed</button>
+                </div>
+              </span>
+            </div>
+            <div class="list-group list-group-flush">
+              <a class="list-group-item list-group-item-action">
+                <div class="d-flex">
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-1">Check In</h6>
+                  </div>
+                  <div class="flex-shrink-0 text-end">
+                    <h6 class="mb-1">{{ !employeeAtt.InTime ? '00:00:00' : (employeeAtt.InTime | date: 'HH:mm:ss a') }}</h6>
+                  </div>
+                </div>
+                <div class="d-flex mt-3">
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-1">Check Out Time</h6>
+                  </div>
+                  <div class="flex-shrink-0 text-end">
+                    <h6 class="mb-1">{{ attendanceButton === 'OutTime' ? '00:00:00' : (employeeAtt.OutTime | date: 'HH:mm:ss a') }}</h6>
+                  </div>
+                </div>
+                <hr />
+                <div class="d-flex mt-3">
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-1">Total WorkTime</h6>
+                  </div>
+                  <div class="flex-shrink-0 text-end">
+                    <h6 class="mb-1">{{ employeeAtt.WorkTime | date: 'HH:mm:ss' }}</h6>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h5 class="mb-3 text-center">Today Attendance Logs</h5>
+          <div class="card tbl-card">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover table-borderless mb-0">
+                  <thead>
+                    <tr class="text-center">
+                      <th>Tracking No</th>
+                      <th>Check In</th>
+                      <th>Check Out</th>
+                      <th>WorkTime</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center" *ngFor="let attendance of attendancelist; let i = index">
+                      <td>
+                        <b> {{ i + 1 }}</b>
+                      </td>
+                      <td class="text-muted">{{ attendance.InTime | date: 'HH:mm:ss' }}</td>
+                      <td class="text-muted">{{ !attendance.OutTime ? '00:00:00' : (attendance.OutTime | date: 'HH:mm:ss') }}</td>
+                      <td class="text-muted">{{ getCalculateWorkedTime(attendance.InTime, attendance.OutTime) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,142 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink (click)="activeSection = 'leave'"> Leaves</button>
+    </li>
+  </ul>
+  <ng-template ngbNavContent [ngIf]="activeSection == 'leave'">
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-3 mt-2">All Leave Details</h5>
+        <div class="d-flex gap-2 align-items-end">
+          <div>
+            <label for=""><b>From Date :</b> </label>
+            <input type="date" class="form-control" [(ngModel)]="from" name="dp" />
+          </div>
+
+          <div>
+            <label for=""><b>To Date :</b> </label>
+            <input type="date" class="form-control" [(ngModel)]="to" [min]="from" name="kp" />
+          </div>
+
+          <div class="get-btn ms-3">
+            <button class="btn btn-md btn-primary" (click)="GetLeaveByDate()">Get Leaves</button>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-primary" (click)="openModal()">New Request</button>
+        </div>
+      </div>
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div *ngIf="!leaveRequests; else leaveRequestsTable" class="text-center"> No leave requests found. </div>
+          <ng-template #leaveRequestsTable>
+            <div class="table-responsive">
+              <table class="table table-hover table-borderless mb-0">
+                <thead>
+                  <tr class="text-center">
+                    <th></th>
+                    <th>Name</th>
+                    <th>Apply Date</th>
+                    <th>Leave Type</th>
+                    <th>Form Date</th>
+                    <th>To Date</th>
+                    <th>Leave Length</th>
+                    <th>Status</th>
+                    <th>Leave Reason</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-center" *ngFor="let Request of leaveRequests">
+                    <td>
+                      <div class="flex-shrink-0">
+                        <img [src]="!Request.Employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + Request.Employee.FileUrl" alt="user-image" class="user-avtar wid-35" />
+                      </div>
+                    </td>
+                    <td>{{ Request.Employee.FirstName }} {{ Request.Employee.LastName }}</td>
+                    <td>{{ Request.CreatedDateTime | date }}</td>
+                    <td>{{ Request.LeaveType }}</td>
+                    <td>{{ Request.FromDate | date }}</td>
+                    <td>{{ Request.ToDate | date }}</td>
+                    <td>{{ Request.IsHalfDay }}</td>
+
+                    <td>
+                      <span
+                        ><i
+                          class="ti ti-circle-check {{
+                            Request.LeaveRequestStatus == leaveRequestStatus.Rejected ? 'text-danger' : 'text-success'
+                          }} m-r-5"
+                        ></i
+                        >{{ Request.LeaveRequestStatus }}</span
+                      >
+                    </td>
+                    <td
+                      ><a class="btn btn-outline-primary" (click)="openReasonModel(Request)"><i class="ti ti-message"></i></a
+                    ></td>
+                    <td>
+                      <span *ngIf="today <= Request.FromDate">
+                        <a class="btn btn-outline-primary" (click)="openModal(Request)"
+                          ><i class="ti ti-edit"></i
+                        ></a>
+                        <a class="btn btn-outline-danger m-2" (click)="Request.IsDeleted=true;deleteLeaveRequest(Request)"
+                          ><i class="ti ti-trash"></i
+                        ></a>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="activeSection == 'leavebalance'"> </ng-template>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
+
+<div #leaveRequestModal class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedLeaveRequest">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{
+          !selectedLeaveRequest ? '' : selectedLeaveRequest.LeaveRequestId ? 'Edit LeaveRequest' : 'New LeaveRequest'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-leave-form
+        [leaveRequests]="selectedLeaveRequest.LeaveRequestId ? [] : leaveRequests"
+        [leaveRequest]="selectedLeaveRequest"
+        (onClose)="closeModel()"
+        (onSave)="onSaved()"
+      ></app-leave-form>
+    </div>
+  </div>
+</div>
+
+<div
+  #leaveRequestReasonModal
+  class="modal fade"
+  id="exampleModalCenter"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" *ngIf="selectedLeaveRequestReason">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Leave Reason</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" (click)="closeModel()"> </button>
+      </div>
+      <div class="modal-body">
+        {{ selectedLeaveRequestReason.Reason }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModel()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

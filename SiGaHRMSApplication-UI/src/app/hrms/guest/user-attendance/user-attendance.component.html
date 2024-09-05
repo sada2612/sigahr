@@ -1,0 +1,120 @@
+<div class="row">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav nav-tabs">
+      <li [ngbNavItem]="1">
+        <button ngbNavLink (click)="activeLink = 'list'">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-user-square"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+            <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+            <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+          </svg>
+          All Attendance
+        </button>
+      </li>
+    </ul>
+  </div>
+  
+  <ng-template ngbNavContent [ngIf]="activeLink === 'list'">
+    <div class="mt-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-3 mt-2">All Attendance Details</h5>
+        <div class="d-flex gap-2 align-items-center">
+          <div>
+            <label for="fromDate"><b>From Date :</b></label>
+            <input type="date" class="form-control" id="fromDate" [(ngModel)]="from" name="fromDate" />
+          </div>
+  
+          <div>
+            <label for="toDate"><b>To Date :</b></label>
+            <input type="date" class="form-control" id="toDate" [(ngModel)]="to" [min]="from" name="toDate" />
+          </div>
+  
+          <div class="get-btn ms-3">
+            <button class="btn btn-md btn-primary" (click)="fetchAttendanceData()">Get Attendance</button>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-outline-primary" (click)="fetchAttendanceData()"><i class="ti ti-refresh"></i></button>
+        </div>
+      </div>
+  
+      <div class="card tbl-card mt-2">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>Date</th>
+                  <th>Department</th>
+                  <th>Check In</th>
+                  <th>Check Out</th>
+                  <th>Working Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let attendance of allAtedanceList" class="text-center">
+                  <td>
+                    <img [src]="!attendance.Employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + attendance.Employee.FileUrl" alt="user-image" class="user-avatar wid-35" />
+                  </td>
+                  <td>{{ attendance.Employee.FirstName }}</td>
+                  <td>{{ attendance.AttendanceDate | date }}</td>
+                  <td>{{ attendance.Employee.CurrentDesignation.DesignationName }}</td>
+                  <td>{{ getInTime(attendance.AttendanceDate).InTime | date: 'HH:mm:ss a' }}</td>
+                  <td>{{
+                    !getOutTime(attendance.AttendanceDate).OutTime
+                      ? '00:00:00'
+                      : (getOutTime(attendance.AttendanceDate).OutTime | date: 'HH:mm:ss a')
+                  }}</td>
+                  <td>{{ convertSecondsToTime(attendance.WorkTime) | date: 'HH:mm:ss' }}</td>
+                  <td>
+                    <a
+                      class="btn btn-outline-primary"
+                      (click)="setChildList(attendance.AttendanceDate); activeLink = 'profile'"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-user-search"
+                      >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                        <path d="M6 21v-2a4 4 0 0 1 4 -4h1.5" />
+                        <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                        <path d="M20.2 20.2l1.8 1.8" />
+                      </svg>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template ngbNavContent [ngIf]="activeLink === 'profile'">
+    <app-attedance-profile [attendancelist]="childAttendancelist"></app-attedance-profile>
+  </ng-template>
+  

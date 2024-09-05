@@ -1,0 +1,104 @@
+<div class="row gutters-sm mt-5">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex flex-column align-items-center text-center">
+          <img
+            [src]="!employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + employee.FileUrl"
+            alt="Admin"
+            class="rounded-circle"
+            width="150"
+          />
+          <div class="mt-3">
+            <h4>{{ employee.FirstName }} {{ employee.LastName }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless text-center mb-0">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Earned</th>
+                <th>Casual</th>
+                <th>Sick</th>
+                <th *ngIf="employee.Gender === 'Male'">Paternity</th>
+                <th *ngIf="employee.Gender !== 'Male'">Maternity</th>
+                <th>Compensatory</th>
+                <th>Marriage</th>
+                <th>Bereavement</th>
+                <th>LossofPay</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Assign</td>
+                <td>{{ !leaveBalance?'-': leaveBalance.EarnedLeaves }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.CasualLeaves }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.SickLeaves }}</td>
+                <td *ngIf="employee.Gender === 'Male'">{{ !leaveBalance?'-':leaveBalance.PaternityLeaves }}</td>
+                <td *ngIf="employee.Gender !== 'Male'">{{ !leaveBalance?'-':leaveBalance.MaternityLeaves }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.CompensatoryOffs }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.MarriageLeaves }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.BereavementLeaves }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.LossofPayLeaves }}</td>
+                <td>{{ !leaveBalance?'-':totalAssignLeaves }}</td>
+              </tr>
+              <tr>
+                <td>Availaed</td>
+                <td [class.text-danger]="!leaveBalance? false: leaveBalance.EarnedLeavesAvailaed != 0">{{ !leaveBalance?'-':leaveBalance.EarnedLeavesAvailaed }}</td>
+                <td [class.text-danger]="!leaveBalance? false: leaveBalance.CasualLeavesAvailaed != 0">{{ !leaveBalance?'-':leaveBalance.CasualLeavesAvailaed }}</td>
+                <td [class.text-danger]="!leaveBalance? false:leaveBalance.SickLeavesAvailaed != 0">{{ !leaveBalance?'-':leaveBalance.SickLeavesAvailaed }}</td>
+                <td *ngIf="employee.Gender === 'Male'" [class.text-danger]="!leaveBalance? false:leaveBalance.PaternityLeavesAvailaed != 0">{{
+                  !leaveBalance?'-': leaveBalance.PaternityLeavesAvailaed
+                }}</td>
+                <td *ngIf="employee.Gender !== 'Male'" [class.text-danger]="!leaveBalance? false:leaveBalance.MaternityLeavesAvailaed != 0">{{
+                  !leaveBalance?'-':leaveBalance.MaternityLeavesAvailaed
+                }}</td>
+                <td [class.text-danger]="!leaveBalance?false:leaveBalance.CompensatoryOffsAvailaed != 0">{{ !leaveBalance?'-': leaveBalance.CompensatoryOffsAvailaed }}</td>
+                <td [class.text-danger]="!leaveBalance?false: leaveBalance.MarriageLeavesAvailaed != 0">{{ !leaveBalance?'-':leaveBalance.MarriageLeavesAvailaed }}</td>
+                <td [class.text-danger]="!leaveBalance?false: leaveBalance.BereavementLeavesAvailaed != 0">{{ !leaveBalance?'-':leaveBalance.BereavementLeavesAvailaed }}</td>
+                <td [class.text-danger]="!leaveBalance?false: leaveBalance.LossofPayLeavesAvailaed != 0">{{ !leaveBalance?'-':leaveBalance.LossofPayLeavesAvailaed }}</td>
+                <td [class.text-danger]="!leaveBalance? false:0 < totalAvailedLeaves">{{ !leaveBalance?'-':totalAvailedLeaves }}</td>
+              </tr>
+              <tr>
+                <td>Available</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.EarnedLeaves - leaveBalance.EarnedLeavesAvailaed }}</td>
+                <td>{{!leaveBalance?'-': leaveBalance.CasualLeaves - leaveBalance.CasualLeavesAvailaed }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.SickLeaves - leaveBalance.SickLeavesAvailaed }}</td>
+                <td *ngIf="employee.Gender === 'Male'">{{ !leaveBalance?'-':leaveBalance.PaternityLeaves - leaveBalance.PaternityLeavesAvailaed }}</td>
+                <td *ngIf="employee.Gender !== 'Male'">{{ !leaveBalance?'-':leaveBalance.MaternityLeaves - leaveBalance.MaternityLeavesAvailaed }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.CompensatoryOffs - leaveBalance.CompensatoryOffsAvailaed }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.MarriageLeaves - leaveBalance.MarriageLeavesAvailaed }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.BereavementLeaves - leaveBalance.BereavementLeavesAvailaed }}</td>
+                <td>{{ !leaveBalance?'-':leaveBalance.LossofPayLeaves - leaveBalance.LossofPayLeavesAvailaed }}</td>
+                <td>{{ !leaveBalance?'-':totalAvailableLeaves }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div></div
+>
+<div class="card card-body">
+  <div class="row">
+    <div id="chart">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [title]="chartOptions.title"
+        [dataLabels]="chartOptions.dataLabels"
+        [stroke]="chartOptions.stroke"
+      >
+      </apx-chart> </div
+  ></div>
+</div>

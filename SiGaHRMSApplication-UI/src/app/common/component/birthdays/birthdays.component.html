@@ -1,0 +1,14 @@
+<div class="row d-flex justify-content justify-content-around">
+  <div class="card col-lg-4 col-xl-3 col-md-5 col-sm-12 " style="margin: 20px;" *ngFor="let employee of employees">
+    <img
+      [src]="employee.FileUrl ? 'http://localhost:5238/' + employee.FileUrl : 'assets/images/user/avatar-2.jpg'"
+      alt="birthday"
+      class="birthday"
+    />
+    <div class="text">
+      <p>{{employee.DateOfBirth | date}}</p>
+      <p class="muted">- {{employee.FirstName+ ' '+employee.LastName}}</p>
+    </div>
+    <div class="space"></div>
+  </div>
+</div>

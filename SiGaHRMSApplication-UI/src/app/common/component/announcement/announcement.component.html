@@ -1,0 +1,43 @@
+<div *ngIf="announcements.length != 0">
+  <div id="announcementCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div *ngFor="let announcement of announcements; let i = index" class="carousel-item {{ i === 0 ? 'active' : '' }}">
+        <div class="item col-8 mx-auto">
+          <div class="img-box">
+            <img
+              [src]="announcement.FileUrl ? 'http://localhost:5238/' + announcement.FileUrl : 'assets/images/user/avatar-2.jpg'"
+              alt="Announcement Image"
+            />
+          </div>
+          <p class="testimonial"> {{ announcement.Description }}. </p>
+          <p class="overview"
+            ><b>{{ announcement.Employee.FirstName + ' ' + announcement.Employee.LastName }}</b
+            >, {{ announcement.Employee.CurrentDesignation.DesignationName }}</p
+          >
+        </div>
+        <span *ngIf="currentUser.role == userRole.SUPER_ADMIN || currentUser.role == userRole.HR" class="d-flex justify-content-center">
+          <div>
+            <button
+              class="btn btn-sm btn-outline-primary m-2"
+              (click)="updateAnnouncement(announcement)"
+            >
+              <i class="ti ti-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteAnnouncement(announcement.AnnouncementId)">
+              <i class="ti ti-trash"></i>
+            </button>
+          </div>
+        </span>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#announcementCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#announcementCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+

@@ -1,0 +1,148 @@
+<div class="row">
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <button ngbNavLink> All Documents</button>
+      </li>
+    </ul>
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="d-flex flex-row-reverse m-2">
+        <div class="btn-group">
+          <button class="btn btn-primary" (click)="openOfficeFestModal()"> Add New </button>
+        </div>
+      </div>
+      <div class="card tbl-card">
+        <div class="card-body" id="foldersGroup">
+          <div id="main-folders" class="d-flex align-items-stretch flex-wrap">
+            <button class="folder-container" *ngFor="let officeFest of officeFests" (click)="openOfficeFestsModal(officeFest)">
+              <div class="folder-icon">
+                <i class="ti ti-folder"></i>
+              </div>
+              <div class="folder-name">{{ officeFest.OfficeFestName }} <br> {{officeFest.OfficeFestDate | date}}</div>
+            </button>
+          </div>
+          <div class=" text-center" *ngIf="!officeFests.length">
+           <h6> Not Found !</h6>
+          </div>
+        </div>
+      </div>
+      <br />
+    </div>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+  </div>
+  
+  <div #officeFestModal class="modal fade" id="officeFestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" *ngIf="selectedOfficeFest">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{
+           'New document'
+          }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <div class="user-group mb-3">
+                      <img
+                        *ngFor="let fileUrl of fileUrls"
+                        [src]="!fileUrl ? 'assets/images/user/avatar-2.jpg' : fileUrl"
+                        alt="image"
+                      />
+                      <img
+                        *ngIf="!fileUrls.length"
+                        [src]="'assets/images/user/avatar-2.jpg'"
+                        alt="image"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        id="fileUpload"
+                        formControlName="fileUrl"
+                        class="form-control"
+                        type="file"
+                        (change)="onFilesSelected($event)"
+                        accept="image/*"
+                        multiple
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="FromDate">Fest Name*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              [(ngModel)]="selectedOfficeFest.OfficeFestName"
+                              name="FromDate"
+                              required
+                              #FromDate="ngModel"
+                            />
+                            <div *ngIf="FromDate.invalid && (FromDate.dirty || FromDate.touched)" class="text-danger">
+                              <div *ngIf="FromDate.errors?.['required']">From Date is required.</div>
+                            </div>
+                            
+                          </div>
+                      </div>
+                
+                      <!-- From Date -->
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="FromDate">Date*</label>
+                          <input
+                            type="date"
+                            class="form-control"
+                            [(ngModel)]="selectedOfficeFest.OfficeFestDate"
+                            name="FromDate"
+                            required
+                            #FromDate="ngModel"
+                          />
+                          <div *ngIf="FromDate.invalid && (FromDate.dirty || FromDate.touched)" class="text-danger">
+                            <div *ngIf="FromDate.errors?.['required']">From Date is required.</div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="addDocument(selectedOfficeFest)">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModel()">Close</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  <div #officeFestsModal class="modal fade" id="officeFestsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content" *ngIf="selectedOfficeFests">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Documents</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+        </div>
+        <div class="modal-body d-flex">
+          <ul class="row d-flex justify-content-around">
+            <li class="col-3" *ngFor="let file of selectedOfficeFests.FileUrl;let i=index">
+              <figure class="">
+                <img [src]="base+file" [alt]="selectedOfficeFests.OfficeFestName">
+                <figcaption>{{selectedOfficeFests.OfficeFestName}}+{{i+1}}</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModel()">
+            <span >Close</span>
+          </button>
+          
+          <button type="button" class="btn btn-danger" (click)="deleteOfficeFest(selectedOfficeFests.OfficeFestId)"> <span >Delete All</span></button>
+          </div
+        >
+      </div>
+    </div>
+  </div>
+  

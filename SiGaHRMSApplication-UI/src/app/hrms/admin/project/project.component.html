@@ -1,0 +1,89 @@
+
+<div class="row">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink > All Projects</button>
+    </li>
+  </ul>
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="d-flex flex-row-reverse m-2">
+        <div class="btn-group">
+          <button class="btn btn-primary" (click)="openModal()">
+            Add New
+            </button>
+        </div>
+      </div>
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>RateUSD</th>
+                  <th>RateINR</th>
+                  <th>BillingPlatform</th>
+                  <th>BillingType</th>
+                  <th>WeeklyLimit</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center" *ngFor="let project of projects;index as i">
+                  <td>
+                   {{i+1}}
+                  </td>
+                  <td>{{ project.Title }} </td>
+                  <td>{{ project.StartDate | date }} </td>
+                  <td>{{ !project.EndDate ? ' Not Declerd Yet' : ' to ' + (project.EndDate | date) }}</td>
+                  
+                  <td>
+                    {{ project.RateUSD }}
+                  </td>
+                  <td>
+                    {{ project.RateINR }}
+                  </td>
+                  <td>
+                    {{ project.BillingPlatform.Name }}
+                  </td>
+                  <td>
+                    {{ project.BillingType }}
+                  </td>
+                  <td>
+                    {{ project.WeeklyLimit }}
+                  </td>
+                  <td>
+                    {{ project.Status }}
+                  </td>
+                  <td>
+                    <a class="btn btn-outline-primary m-2" (click)="openModal(project)"
+                      ><i class="ti ti-edit"></i
+                    ></a>
+                    <a class="btn btn-outline-danger"><i class="ti ti-trash" (click)="project.IsDeleted=true;deleteProject(project)"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
+<div #projectModal class="modal fade" tabindex="-1" aria-labelledby="projectModal" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered" >
+    <div class="modal-content" *ngIf="selectedProject!=null">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="salaryModalLabel">{{
+          !selectedProject ? '' : selectedProject.ProjectId ? 'Edit Project' : 'New Project'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <app-form [formData]="selectedProject" [fields]="projectFields" (onClose)="closeModal()" (onSave)="onProjectSaved($event)"></app-form>
+    </div>
+  </div>
+</div>

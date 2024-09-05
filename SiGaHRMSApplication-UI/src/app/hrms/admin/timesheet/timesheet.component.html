@@ -1,0 +1,113 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink (click)="actionLink = 'list'">Today's TimeSheet's</button>
+    </li>
+  </ul>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'list'">
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="container d-flex flex-wrap column-reverse justify-content-around">
+        <div class="row  my-auto">
+          <div class="col-12 d-flex justify-content-around ">
+            <h5 class="mb-3 mt-2">All TimeSheet's Details</h5>
+            
+          </div>
+        </div>
+        <div class="row  my-auto">
+          <div class="col-12 d-flex flex-wrap gap-2 align-items-end">
+            <div class="form-group col-md-4 ">
+              <label for="timeSheetStatus"><b>SheetStatus :</b></label>
+              <select class="form-control" id="timeSheetStatus" [(ngModel)]="timeSheetStatusConst">
+                <option value="{{ timeSheetStatus.All }}" selected>{{ timeSheetStatus.All }}</option>
+                <option *ngFor="let timeSheetStatusOption of timeSheetStatusOptions" [value]="timeSheetStatusOption.value">
+                  {{ timeSheetStatusOption.label }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-4 ">
+              <label for="timeSheetType"><b>Type :</b></label>
+              <select class="form-control" id="timeSheetType" [(ngModel)]="timeSheetTypeConst">
+                <option *ngFor="let timeSheetTypeOption of timeSheetTypeOptions" [value]="timeSheetTypeOption.value">
+                  {{ timeSheetTypeOption.label }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-4 ">
+              <label for="fromDate"><b>From Date :</b></label>
+              <input type="date" class="form-control" id="fromDate" [(ngModel)]="from" name="dp" />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="toDate"><b>To Date :</b></label>
+              <input type="date" class="form-control" id="toDate" [(ngModel)]="to" [min]="from" name="kp" />
+            </div>
+            <div class="col-md-12 ">
+              <button class="btn  btn-md btn-primary" (click)="getTimeSheets()">Get Timesheets</button>
+            </div>
+          </div>
+          
+        </div>
+        <div *ngIf="user.role != userRole.SUPER_ADMIN" class="my-auto"  >
+          <button class="btn btn-primary" (click)="actionLink = 'addTask'"> Log Time </button>
+        </div>
+        
+      </div>
+      
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>TimesheetDate</th>
+                  <th>Working Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center" *ngFor="let timeSheet of timeSheets">
+                  <td>
+                    <div class="flex-shrink-0">
+                      <img
+                        [src]="
+                          !timeSheet.Employee.FileUrl
+                            ? 'assets/images/user/avatar-2.jpg'
+                            : 'http://localhost:5238/' + timeSheet.Employee.FileUrl
+                        "
+                        alt="user-image"
+                        class="user-avtar wid-35"
+                      />
+                    </div>
+                  </td>
+                  <td>{{ timeSheet.Employee.FirstName }} {{ timeSheet.Employee.LastName }}</td>
+                  <td
+                    >{{ timeSheet.TimesheetDate | date }}
+                    {{ !timeSheet.ToTimesheetDate ? '' : ' to ' + (timeSheet.ToTimesheetDate | date) }}</td
+                  >
+                  <td>
+                    {{ timeSheet.WorkingHours }}
+                  </td>
+                  <td>
+                    <a class="btn btn-outline-primary" (click)="selectedTimeSheet = timeSheet; actionLink = 'viewTask'"
+                      ><i class="ti ti-eye"></i
+                    ></a>
+                    <a class="btn btn-outline-primary m-2"><i class="ti ti-edit"></i></a>
+                    <a class="btn btn-outline-danger"><i class="ti ti-trash"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'addTask'">
+    <app-timesheet-detail></app-timesheet-detail>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'viewTask'">
+    <app-timesheet-detail [timeSheet]="selectedTimeSheet"></app-timesheet-detail>
+  </ng-template>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>

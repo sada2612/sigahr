@@ -1,0 +1,112 @@
+<div class="navigation row d-flex justify-content-between">
+  <div class="d-flex col-sm-12 align-items-center">
+    <li class="d-flex justify-content-center align-items-center" (click)="prevMonth()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-left">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M15 6l-6 6l6 6" />
+      </svg>
+    </li>
+    <div>
+      <h1 class="d-flex justify-content-center">{{ months[currentMonth] }} {{ currentYear }}</h1>
+      <p class="d-flex justify-content-center">Holidays and Daily Observances in the United States</p>
+    </div>
+    <li class="d-flex justify-content-center align-items-center" (click)="nextMonth()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-chevron-right">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M9 6l6 6l-6 6" />
+      </svg>
+    </li>
+  </div>
+  <div class="col-sm-12 d-flex justify-content-center select">
+    <li>
+      <select style="border: none" [(ngModel)]="currentMonth" (ngModelChange)="fetchData()" class="form-control m-0">
+        <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
+      </select>
+    </li>
+    <li>
+      <select style="border: none" (ngModelChange)="fetchData()" [(ngModel)]="currentYear" class="form-control m-0">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+    </li>
+  </div>
+</div>
+
+<ul>
+  <span class="row mx-auto" >
+    <li class="col-2" *ngFor="let day of calendar; trackBy: trackByDate">
+      <div
+        class="d-flex justify-content-between"
+        [ngClass]="{
+          'text-danger': isWeekend(day.Date) || hasHoliday(day.Event)
+        }"
+      >
+        <time>{{ day.Date ? day.Date.getDate() : '' }}</time>
+        <span>{{ day.Date ? daysOfWeek[day.Date.getDay()] : '' }}</span>
+      </div>
+      <div
+        class="hover-element"
+        (click)="openModal(day.Event)"
+        *ngIf="day.Event.length > 0"
+        class="d-flex justify-content-between align-items-center"
+      >
+        <div class="col-auto">
+          <div class="user-group mb-3">
+            <img
+              *ngFor="let eventData of day.Event"
+              [src]="!eventData.EventUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + eventData.EventUrl"
+              alt="image"
+            />
+          </div>
+        </div>
+      </div>
+    </li>
+  </span>
+</ul>
+<div
+  #exampleModalCenter
+  class="modal fade"
+  id="exampleModalCenter"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Events</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+          <div class="list-group list-group-flush">
+            <a href="javascript:" class="list-group-item list-group-item-action" *ngFor="let selectedEvent of selectedEvents">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="user-group rounded-circle">
+                    <img
+                      class="notification-img"
+                      [src]="
+                        !selectedEvent.EventUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + selectedEvent.EventUrl
+                      "
+                      alt="Event Img"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <h6 class="mb-1">{{ selectedEvent.EventName }}</h6>
+                  <p class="mb-0 text-muted">{{ selectedEvent.EventDate | date }}</p>
+                </div>
+                <div>
+                  <p class="mb-0 text-muted">{{ selectedEvent.EventType }}</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;800&display=swap");
+
+h1 {
+  font-weight: 800;
+  margin: 1rem 0 0;
+}
+
+time {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  width: 13rem;
+  height: 9rem;
+  margin: 0.25rem;
+  border-radius: 0.2rem;
+  padding: 1rem;
+  font-weight: 300;
+  font-size: 0.8rem;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 #adb2bb;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+
+}
+
+.user-group .notification-img {
+  width: 75px;
+  height: 75px;
+}
+
+.navigation li {
+  padding: 0;
+  list-style: none;
+  width: auto;
+  height: auto;
+}
+
+.select li {
+  width: 100px;
+  height: 50px;
+}

@@ -1,0 +1,96 @@
+
+<div class="row">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1" (click)="activeLink = 'list'">
+      <button ngbNavLink > Attendance</button>
+    </li>
+  </ul>
+  <ng-template ngbNavContent [ngIf]="activeLink === 'list'">
+    <div class="row" style=" width: 100%">
+      <div class="container">
+        <div class="row mb-3">
+          <div class="col-12 d-flex justify-content-around align-items-center">
+            <h5>All Attendance Details</h5>
+            <button class="btn btn-outline-primary" (click)="fetchAttendanceData()">
+              <i class="ti ti-refresh"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 d-flex flex-wrap justify-content-around align-items-center">
+            <div class="form-group mb-3 me-3">
+              <label for="fromDate"><b>From Date:</b></label>
+              <input type="date" class="form-control" id="fromDate" [(ngModel)]="from" name="fromDate" />
+            </div>
+            <div class="form-group mb-3 me-3">
+              <label for="toDate"><b>To Date:</b></label>
+              <input type="date" class="form-control" id="toDate" [(ngModel)]="to" [min]="from" name="toDate" />
+            </div>
+            <div class="mb-3">
+              <button class="btn btn-md btn-primary" (click)="fetchAttendanceData()">Get Attendance</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>Date</th>
+                  <th>Department</th>
+                  <th>Check In</th>
+                  <th>Check Out</th>
+                  <th>Working Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let attendance of allAtedanceList" class="text-center">
+                  <td>
+                    <img
+                      [src]="
+                        !attendance.Employee.FileUrl
+                          ? 'assets/images/user/avatar-2.jpg'
+                          : 'http://localhost:5238/' + attendance.Employee.FileUrl
+                      "
+                      alt="user-image"
+                      class="user-avatar wid-35"
+                    />
+                  </td>
+                  <td>{{ attendance.Employee.FirstName }}</td>
+                  <td>{{ attendance.AttendanceDate | date }}</td>
+                  <td>{{ attendance.Employee.CurrentDesignation.DesignationName }}</td>
+                  <td>{{ getInTime(attendance.EmployeeId, attendance.AttendanceDate).InTime | date: 'HH:mm:ss a' }}</td>
+                  <td>{{
+                    !getOutTime(attendance.EmployeeId, attendance.AttendanceDate).OutTime
+                      ? '00:00:00'
+                      : (getOutTime(attendance.EmployeeId, attendance.AttendanceDate).OutTime | date: 'HH:mm:ss a')
+                  }}</td>
+                  <td>{{ convertSecondsToTime(attendance.WorkTime) | date: 'HH:mm:ss' }}</td>
+                  <td>
+                    <a
+                      class="btn btn-outline-primary"
+                      (click)="setChildList(attendance.EmployeeId, attendance.AttendanceDate); activeLink = 'profile'"
+                    >
+                    <i class="ti ti-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="activeLink === 'profile'">
+    <app-attedance-profile [attendancelist]="childAttendancelist"></app-attedance-profile>
+  </ng-template>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+  
+</div>
+

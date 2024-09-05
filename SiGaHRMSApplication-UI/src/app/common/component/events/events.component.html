@@ -1,0 +1,69 @@
+<div *ngIf="currentUser.role == userRole.SUPER_ADMIN || currentUser.role == userRole.HR" class="d-flex justify-content-end">
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">New </button>
+    <ul class="dropdown-menu">
+      <li><button class="dropdown-item" (click)="openEventModal()">Event</button></li>
+      <li><button class="dropdown-item" (click)="openAnnouncementModal()">Announcement</button></li>
+    </ul>
+  </div>
+</div>
+<div>
+  <app-announcement (onDelete)="getAnnouncement()" [announcements]="announcements" (onUpdate)="openAnnouncementModal($event)"></app-announcement>
+</div>
+
+<div class="row justify-content-around">
+  <div class="card-hover col-4 m-2" *ngFor="let event of events">
+    <div class="card-hover__content">
+      <h3 class="card-hover__title">
+        {{ event.Name }} ! <br /><span>{{ event.Date | date }}</span>
+      </h3>
+      <p class="card-hover__text"
+        >{{ event.Description }}
+
+        <span *ngIf="currentUser.role == userRole.SUPER_ADMIN || currentUser.role == userRole.HR" class="card-hover__link"
+          ><button
+            class="btn btn-sm btn-outline-primary"
+            (click)="openEventModal(event)"
+            ><i class="ti ti-edit"></i
+          ></button>
+          <button class="btn btn-sm btn-outline-danger mx-2" (click)="deleteEvent(event.EventId)"><i class="ti ti-trash"></i></button
+        ></span>
+      </p>
+      <p class="card-hover__text overview d-flex justify-content-end"><b class="color-secondary">- SiGa Systems</b>, Pune</p>
+    </div>
+    <img [src]="!event.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + event.FileUrl" />
+  </div>
+</div>
+
+<div #eventModal class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedEvent">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{
+          !selectedEvent ? '' : selectedEvent.EventId ? 'Edit Event' : 'New Event'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form [formData]="selectedEvent" [fields]="eventfields" (onClose)="closeModel()" (onSave)="onEventSaved($event)"></app-form>
+    </div>
+  </div>
+</div>
+
+<div #announcementModal class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedAnnouncement">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{
+          !selectedAnnouncement ? '' : selectedAnnouncement.AnnouncementId ? 'Edit Announcement' : 'New Announcement'
+        }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form
+        [formData]="selectedAnnouncement"
+        (onClose)="closeModel()"
+        [fields]="announcementfields"
+        (onSave)="onAnnouncementSaved($event)"
+      ></app-form>
+    </div>
+  </div>
+</div>

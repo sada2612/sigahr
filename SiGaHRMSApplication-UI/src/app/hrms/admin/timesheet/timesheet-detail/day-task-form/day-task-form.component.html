@@ -1,0 +1,73 @@
+
+      <div class="modal-header">
+        <div>
+          <h3>Add Time</h3>
+          <h6 class="text-start">Task: {{ !daySheet?'': daySheet?.Task.TaskDetails }}</h6>
+          <h6 class="text-start">Date: {{ !daySheet?'':daySheet?.Date | date :'dd-MMM-yyyy' }}</h6>
+        </div>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover">
+          <thead>
+            <tr class="text-center">
+              <th class="col-3">TaskType</th>
+              <th class="col-3">Hours</th>
+              <th class="col-3">Billable</th>
+              <th class="col-3" *ngIf="loginId==daySheet.EmployeeId">Action</th>
+            </tr>
+          </thead>
+          <tbody class="text-center">
+            <tr *ngFor="let sheet of daySheet?.TimeSheetDetail">
+              <td class="col-3 border">
+                <select class="form-control" style="border: none" [(ngModel)]="sheet.TaskType" [disabled]="loginId != daySheet.EmployeeId">
+                  <option *ngFor="let taskTypeOption of taskTypeOptions" [value]="taskTypeOption.value">{{ taskTypeOption.label }}</option>
+                </select>
+              </td>
+              <td class="col-3 border">
+                <input style="border: none" type="number" [(ngModel)]="sheet.HoursSpent" min="-32768" [disabled]="loginId != daySheet.EmployeeId" max="32767" class="form-control" />
+              </td>
+              <td class="col-3 border">
+                <select style="border: none" class="form-control" [(ngModel)]="sheet.IsBillable" [disabled]="loginId != daySheet.EmployeeId">
+                  <option [ngValue]="true">Billable</option>
+                  <option [ngValue]="false">Not Billable</option>
+                </select>
+              </td>
+              <td class="col-3" *ngIf="loginId==daySheet.EmployeeId">
+                <button class="btn btn-outline-danger" (click)="removeSheet(sheet)"><i class="ti ti-trash"></i></button>
+              </td>
+            </tr>
+            <tr *ngIf="loginId==daySheet.EmployeeId">
+              <td class="col-3 border">
+                <select class="form-control" [(ngModel)]="newSheet.TaskType" >
+                  <option [value]="null"></option>
+                  <option *ngFor="let taskTypeOption of taskTypeOptions" [value]="taskTypeOption.value">{{ taskTypeOption.label }}</option>
+                </select>
+              </td>
+              <td class="col-3 border">
+                <input type="number" [(ngModel)]="newSheet.HoursSpent" min="-32768" max="32767" class="form-control" />
+              </td>
+              <td class="col-3 border">
+                <select class="form-control" [(ngModel)]="newSheet.IsBillable">
+                  <option [ngValue]="true">Billable</option>
+                  <option [ngValue]="false">Not Billable</option>
+                </select>
+              </td>
+              <td class="col-3" >
+                <button class="btn btn-outline-success" (click)="addNewSheet()"><i class="ti ti-plus"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button
+          *ngIf="loginId == daySheet.EmployeeId"
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!hasChanges()"
+          (click)="saveChanges()"
+        >
+          Save changes
+        </button>
+      </div>

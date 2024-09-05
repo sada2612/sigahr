@@ -1,0 +1,78 @@
+<div class="row">
+  <!-- [ sample-page ] start -->
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="mb-2 f-w-400 text-muted">On Leave</h6>
+        <h4 class="mb-3">
+          {{todayApprovedLeave }}
+          
+        </h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="mb-2 f-w-400 text-muted">Total Attedance</h6>
+        <h4 class="mb-3">
+          {{ attendanceCount }}
+          
+        </h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="mb-2 f-w-400 text-muted">Pending Leave Approval</h6>
+        <h4 class="mb-3">
+          {{ pendingleaveRequest }}
+          
+        </h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="mb-2 f-w-400 text-muted">Time</h6>
+        <h4 class="mb-3 d-flex justify-content-around">
+         <div class="d-flex my-1"><i class="ti ti-clock"> </i><app-clock></app-clock></div>
+          <div class="my-1" style="font-size: 14px">{{ today | date: 'EEE, MMM d, yyyy' }}</div>
+        </h4>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h5 class="mb-0">Project Billing</h5>
+  <ul ngbNav aria-busy="true" #nav="ngbNav" class="nav-pills justify-content-end mb-0" (navChange)="onNavChange($event)">
+    <li [ngbNavItem]="1">
+      <a ngbNavLink>Week</a>
+      <ng-template ngbNavContent>
+        <div id="admin-chart"></div>
+      </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+      <a ngbNavLink>Month</a>
+      <ng-template ngbNavContent>
+        <div id="admin-chart-1"></div>
+      </ng-template>
+    </li>
+  </ul>
+  <span>
+    <div class="form-group mb-3">
+      <label class="form-label" for="Project">Projects</label>
+      <select class="form-control" [(ngModel)]="Billing" (change)="fetch()" id="Project">
+        <option [value]="null">Select Project</option>
+        <option *ngFor="let project of projects" [value]="project.Title">{{ project.Title }}</option>
+      </select>
+    </div>
+  </span>
+</div>
+<div class="card">
+  <div class="card-body">
+    <div [ngbNavOutlet]="nav"></div>
+  </div>
+</div>

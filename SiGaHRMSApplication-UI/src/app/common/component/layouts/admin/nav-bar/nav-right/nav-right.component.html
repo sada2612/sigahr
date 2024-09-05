@@ -1,0 +1,106 @@
+<ul class="list-unstyled">
+  <li class="dropdown pc-h-item"  ngbDropdown>
+    <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle (click)="toggleDropdown()">
+      <i class="ti ti-bell"></i>
+      <span class="badge bg-success pc-h-badge">{{ notifications.length }}</span>
+    </a>
+    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown" [class.show]="isDropdownOpen"  ngbDropdownMenu>
+      <div class="dropdown-header d-flex align-items-center justify-content-between">
+        <h5 class="m-0">Notification</h5>
+        <a class="pc-head-link bg-transparent" (click)="toggleDropdown()"><i class="ti ti-circle-check text-success"></i></a>
+      </div>
+      <div class="dropdown-divider"></div>
+      <ng-scrollbar style="height: calc(100vh - 300px)" visibility="hover">
+        <div class="dropdown-header px-0 text-wrap header-notification-scroll">
+          <div class="list-group list-group-flush w-100">
+            <a class="list-group-item list-group-item-action" (click)="RouterLink()" *ngFor="let notification of notifications">
+              <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <div class="user-avtar bg-light-{{ notification.Color }}">
+                    <i class="{{ notification.Icon }}"></i>
+                  </div>
+                </div>
+                <div class="flex-grow-1 ms-1">
+                  <span class="float-end text-muted">{{ notification.EventName }}</span>
+                  <p class="text-body mb-1"
+                    ><b>{{ notification.Name }} </b>
+                  </p>
+                  <span class="text-muted">{{ notification.Date }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </ng-scrollbar>
+      <div class="dropdown-divider"></div>
+      <div class="text-center py-2">
+        <a class="link-primary" (click)="toggleDropdown()">View all</a>
+      </div>
+    </div>
+  </li>
+  <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
+    <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
+      <img
+        [src]="!employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + employee.FileUrl"
+        alt="user-image"
+        class="user-avtar"
+      />
+      <span>{{ employee.FirstName + ' ' + employee.LastName }}</span>
+    </a>
+    <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
+      <div class="dropdown-header">
+        <div class="d-flex mb-1">
+          <div class="flex-shrink-0">
+            <img
+              [src]="!employee.FileUrl ? 'assets/images/user/avatar-2.jpg' : 'http://localhost:5238/' + employee.FileUrl"
+              alt="user-image"
+              class="user-avtar wid-35"
+            />
+          </div>
+          <div class="flex-grow-1 ms-3">
+            <h6 class="mb-1">{{ employee.FirstName + ' ' + employee.LastName }}</h6>
+            <span>{{ User.role }}</span>
+          </div>
+          <a class="pc-head-link bg-transparent" (click)="LogOut()"><i class="ti ti-power text-danger"></i></a>
+        </div>
+      </div>
+      <ul ngbNav #nav="ngbNav" class="nav drp-tabs nav-fill nav-tabs">
+        <li ngbNavItem="1">
+          <a ngbNavLink><i class="ti ti-user"></i> Profile</a>
+          <ng-template ngbNavContent>
+            <div>
+              <a class="dropdown-item" [routerLink]="getProfileLink(employee.EmployeeId)">
+                <i class="ti ti-user"></i>
+                <span>View Profile</span>
+              </a>
+            </div>
+            <div>
+              <a class="dropdown-item">
+                <i class="ti ti-edit-circle"></i>
+                <span>Edit Profile</span>
+              </a>
+            </div>
+            <div (click)="LogOut()">
+              <a class="dropdown-item">
+                <i class="ti ti-power"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </ng-template>
+        </li>
+        <li ngbNavItem="2">
+          <a ngbNavLink><i class="ti ti-settings"></i> Setting</a>
+          <ng-template ngbNavContent>
+            <div *ngFor="let task of setting">
+              <a href="javascript:" class="dropdown-item">
+                <i class="{{ task.icon }}"></i>
+                <span>{{ task.title }}</span>
+              </a>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav"></div>
+    </div>
+  </li>
+</ul>

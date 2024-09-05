@@ -1,0 +1,66 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink>Today's TimeSheet's</button>
+    </li>
+  </ul>
+  <div class="col-md-12 col-xl-8" style="width: 100%">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-3 mt-2">All Cilent Details</h5>
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="openModal()"> New </button>
+      </div>
+    </div>
+    <div class="card tbl-card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless mb-0">
+            <thead>
+              <tr class="text-center">
+                <th></th>
+                <th>Name</th>
+                <th>CompanyName</th>
+                <th>ContactPersonName</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-center" *ngFor="let client of clients;let i=index">
+                <td>
+                  {{i+1}}
+                </td>
+                <td>{{ client.Name }} </td>
+                <td>{{ client.CompanyName }} </td>
+                <td>
+                  {{ client.ContactPersonName }}
+                </td>
+                <td>
+                  {{ client.Status }}
+                </td>
+
+                <td>
+                  <a class="btn btn-outline-primary m-2" (click)="openModal(client)"><i class="ti ti-edit"></i></a>
+                  <a class="btn btn-outline-danger" (click)="client.IsDeleted = true; updateClient(client)"><i class="ti ti-trash"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
+<div #clientModal class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" *ngIf="selectedClient!=null">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ !selectedClient?'': selectedClient.ClientId? 'Edit Client' : 'New Client' }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModel()"></button>
+      </div>
+      <app-form [formData]="selectedClient" [fields]="clientFields" (onClose)="closeModel()" (onSave)="onClientSaved($event)"></app-form>
+    </div>
+  </div>
+</div>

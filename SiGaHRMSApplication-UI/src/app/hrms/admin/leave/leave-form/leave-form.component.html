@@ -1,0 +1,135 @@
+<div class="modal-body">
+  <form #leaveForm="ngForm">
+    <div class="row">
+      <!-- Leave Type -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="LeaveType">Leave Type</label>
+          <select
+            class="form-control"
+            required
+            [(ngModel)]="leaveRequest.LeaveType"
+            (ngModelChange)="validateLeaveType()"
+            name="LeaveType"
+            #LeaveType="ngModel"
+          >
+            <option *ngFor="let option of leaveTypeOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+          <div *ngIf="LeaveType.invalid && (LeaveType.dirty || LeaveType.touched)" class="text-danger">
+            <div *ngIf="LeaveType.errors?.['required']">Leave Type is required.</div>
+          </div>
+          <div *ngIf="isLeaveBalanceAvailable" class="text-danger">
+            {{ leaveRequest.LeaveType }} Not Available.
+          </div>
+        </div>
+      </div>
+
+      <!-- From Date -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="FromDate">From Date*</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="leaveRequest.FromDate"
+            name="FromDate"
+            required
+            #FromDate="ngModel"
+          />
+          <div *ngIf="FromDate.invalid && (FromDate.dirty || FromDate.touched)" class="text-danger">
+            <div *ngIf="FromDate.errors?.['required']">From Date is required.</div>
+          </div>
+          <div *ngIf="isInvalidDate(leaveRequest.FromDate)" class="text-danger">
+            {{ getInvalidDateMessage(leaveRequest.FromDate) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- To Date -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="ToDate">To Date*</label>
+          <input
+            type="date"
+            min="{{ leaveRequest.FromDate }}"
+            class="form-control"
+            [(ngModel)]="leaveRequest.ToDate"
+            name="ToDate"
+            required
+            #ToDate="ngModel"
+          />
+          <div *ngIf="ToDate.invalid && (ToDate.dirty || ToDate.touched)" class="text-danger">
+            <div *ngIf="ToDate.errors?.['required']">To Date is required.</div>
+          </div>
+          <div *ngIf="isInvalidDate(leaveRequest.ToDate)" class="text-danger">
+            {{ getInvalidDateMessage(leaveRequest.ToDate) }}
+          </div>
+          <div *ngIf="leaveBalanceExceeded()" class="text-danger">
+            {{ leaveRequest.LeaveType }} is only {{ leaveBalance[leaveRequest.LeaveType + 's'] }} Available.
+          </div>
+        </div>
+      </div>
+
+      <!-- Half Day -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="IsHalfDay">Half Day</label>
+          <select
+            class="form-control"
+            required
+            [(ngModel)]="leaveRequest.IsHalfDay"
+            name="IsHalfDay"
+            #IsHalfDay="ngModel"
+            (change)="onIsHalfDayChange($event)"
+          >
+            <option [value]="true">Yes</option>
+            <option [value]="false">No</option>
+          </select>
+          <div *ngIf="IsHalfDay.invalid && (IsHalfDay.dirty || IsHalfDay.touched)" class="text-danger">
+            <div *ngIf="IsHalfDay.errors?.['required']">Half Day selection is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reason -->
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="Reason">Reason*</label>
+          <textarea
+            class="form-control"
+            [(ngModel)]="leaveRequest.Reason"
+            name="Reason"
+            required
+            placeholder="Type Reason here"
+            #Reason="ngModel"
+          ></textarea>
+          <div *ngIf="Reason.invalid && (Reason.dirty || Reason.touched)" class="text-danger">
+            <div *ngIf="Reason.errors?.['required']">Reason is required.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="close()">Close</button>
+  <button
+    type="button"
+    class="btn btn-primary"
+    [disabled]="
+      leaveForm.invalid ||
+      !hasChanges() ||
+      isInvalidDate(leaveRequest.ToDate) ||
+      isInvalidDate(leaveRequest.FromDate) ||
+      isLeaveBalanceAvailable ||
+      leaveBalanceExceeded()
+    "
+    (click)="saveLeaveRequest()"
+  >
+    Save Leave
+  </button>
+</div>
+
